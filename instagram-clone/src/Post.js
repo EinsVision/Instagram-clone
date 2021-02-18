@@ -15,7 +15,7 @@ function Post() {
       {/* image */}
 
       {/* username + caption */}
-      <h4>Username: caption</h4>
+      <h4 className='post__text'><strong>jcdlove</strong> : Reactjs is amzaing!</h4>
     </div>
   )
 }
