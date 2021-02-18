@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Post from './Post';
 
 function App() {
+  const [posts, setPosts] = useState([]);
+  
   return (
     <div className="app">
       <div className='app__header'>
