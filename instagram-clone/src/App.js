@@ -11,9 +11,9 @@ function App() {
               alt=''
         />
       </div>
-      <Post />
-      <Post />
-      <Post />
+      <Post username='einsvision' caption='WOW it works.' imageUrl='https://hackernoon.com/images/z2xg2bpo.jpg'/>
+      <Post username='jcdlove' caption='Instagram clone coding.'/>
+      <Post username='egoing' caption='i am a helper in the world.'/>
     </div>
   );
 }
