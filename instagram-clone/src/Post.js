@@ -10,11 +10,7 @@ function Post({postId, username, caption, imageUrl}) {
   useEffect( () => {
     let unsubscribe;
     if ( postId ) {
-      unsubscribe = db
-      .collection('posts')
-      .doc(postId)
-      .collection('comments')
-      .onSnapshot((snapshot) => {
+      unsubscribe = db.collection('posts').doc(postId).collection('comments').onSnapshot((snapshot) => {
         setComments(snapshot.docs.map( (doc)=>doc.data() ) );
       });
     }
@@ -26,7 +22,7 @@ function Post({postId, username, caption, imageUrl}) {
   }, [postId]);
 
   const postComment = (event) => {
-
+    event.preventDefault();
   }
 
   return (
@@ -47,8 +43,18 @@ function Post({postId, username, caption, imageUrl}) {
       />
       
       <h4 className='post__text'><strong>{username}</strong> {caption}</h4>
-
-      <form>
+      
+      <div className='post__comments'>
+        {
+          comments.map( (comment) => (
+            <p>
+              <strong>{comment.username}</strong> {comment.text}
+            </p>
+          ))
+        }
+      </div>
+      
+      <form className='post__commentBox'>
         <input
           className='post__input'
           type='text'
