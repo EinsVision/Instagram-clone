@@ -97,12 +97,7 @@ function App() {
   
   return (
     <div className="app">
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName}/>
-      ):(
-        <h3>You need to login to upload image.</h3>
-      )}
-      
+           
       <Modal
         open={open}
         onClose={ () => setOpen(false) }
@@ -172,24 +167,27 @@ function App() {
               src='https://logodownload.org/wp-content/uploads/2017/04/instagram-logo-17.png' 
               alt=''
         />
+        {user ? (
+          <Button onClick={ () => auth.signOut() }>Logout</Button>
+          ) : (
+          <div className='app__loginContainer'>
+            <Button onClick={ () => setOpenSignIn(true) }>Sign in</Button>
+            <Button onClick={ () => setOpen(true) }>Sign up</Button>
+          </div>
+        )}
       </div>
-
-      
-      {user ? (
-        <Button onClick={ () => auth.signOut() }>Logout</Button>
-      ) : (
-        <div className='app__loginContainer'>
-          <Button onClick={ () => setOpenSignIn(true) }>Sign in</Button>
-          <Button onClick={ () => setOpen(true) }>Sign up</Button>
-        </div>
-        
-      )}
 
       {
         posts.map(({id, post}) => (
           <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
         ))
       }
+
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName}/>
+        ):(
+        <h3>You need to login to upload image.</h3>
+      )}
       
     </div>
   );
