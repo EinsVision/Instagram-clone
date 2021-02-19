@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Post from './Post';
-import {db} from './firebase';
+import {auth, db} from './firebase';
 import Modal from '@material-ui/core/Modal';
 import { Button, Input, makeStyles } from '@material-ui/core';
 
@@ -32,10 +32,36 @@ function App() {
   const [modalStyle] = useState(getModalStyle);
   const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(false);
-
+  const [openSignIn, setOpenSignIn] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if(authUser){
+        // user logged in..
+        console.log(authUser);
+        setUser(authUser);
+
+        if(authUser.displayName){
+          // don't update username
+        } else{
+          // if we just created someone
+          return authUser.updateProfile({
+            displayName: username,
+          });
+        }
+      } else {
+        // user logged out..
+        setUser(null);
+      }
+    })
+    return () => {
+      unsubscribe();
+    }
+  }, []);
 
   useEffect(() => {
     db.collection('posts').onSnapshot(snapshot => {
@@ -48,7 +74,14 @@ function App() {
   }, []); // perform once.
 
   const signUp = (event) => {
-    // event.preventDefault();
+    event.preventDefault();
+    auth.createUserWithEmailAndPassword(email, password)
+    .then((authUser) =>{
+      return authUser.user.updateProfile({
+        displayName: username,
+      })
+    })
+    .catch((error) => alert(error));
   }
   
   return (
@@ -65,12 +98,7 @@ function App() {
                   alt=''
               />
             </center>
-            <Input 
-              type='text'
-              placeholder='username'
-              value={username}
-              onChange={ (e) => setUsername(e.target.value) }
-            />
+            
             <Input 
               type='text'
               placeholder='email'
@@ -83,7 +111,7 @@ function App() {
               value={password}
               onChange={ (e) => setPassword(e.target.value) }
             />
-            <Button onClick={signUp}>Login</Button>
+            <Button type='submit' onClick={signUp}>Sign up</Button>
           </form>          
         </div>
       </Modal>
@@ -95,7 +123,13 @@ function App() {
         />
       </div>
 
-      <Button onClick={ () => setOpen(true) }>Sign up</Button>
+      
+      {user ? (
+        <Button onClick={ () => auth.signOut() }>Logout</Button>
+      ) : (
+        
+        <Button onClick={ () => setOpen(true) }>Sign up</Button>
+      )}
 
       {
         posts.map(({id, post}) => (
