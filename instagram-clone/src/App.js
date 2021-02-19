@@ -179,12 +179,32 @@ function App() {
       </div>
 
       <div className='app__posts'>
-        {
-          posts.map(({id, post}) => (
-            <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
-          ))
-        }
+        <div className='app_postsLeft'>
+          {
+            posts.map(({id, post}) => (
+              <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
+            ))
+          }
+        </div>
+
+        <div className='app_postsRight'>
+          <InstagramEmbed
+            url='https://instagr.am/p/Zw9o4/'
+            clientAccessToken='123|456'
+            maxWidth={320}
+            hideCaption={false}
+            containerTagName='div'
+            protocol=''
+            injectScript
+            onLoading={() => {}}
+            onSuccess={() => {}}
+            onAfterRender={() => {}}
+            onFailure={() => {}}
+          />
+        </div>
       </div>
+
+      
 
       {user?.displayName ? (
         <ImageUpload username={user.displayName}/>
