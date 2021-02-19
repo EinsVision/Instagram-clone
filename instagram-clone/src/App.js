@@ -96,6 +96,9 @@ function App() {
   
   return (
     <div className="app">
+
+      {/* Imageupload */}
+      
       <Modal
         open={open}
         onClose={ () => setOpen(false) }
